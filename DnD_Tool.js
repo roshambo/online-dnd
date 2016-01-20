@@ -7,7 +7,6 @@ Drag images to customize characters
 Note: Need to clean up code and need to implement custom board
 */
 
-
 var resCount = 2;
 
 var img = new Image();
