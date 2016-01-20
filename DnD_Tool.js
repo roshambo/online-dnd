@@ -1,3 +1,13 @@
+/*
+Left Click to add players
+Right Click to draw shapes
+Middle Click to delete shapes
+Hover over character and press backspace to delete character
+Drag images to customize characters
+Note: Need to clean up code and need to implement custom board
+*/
+
+
 var resCount = 2;
 
 var img = new Image();
@@ -15,8 +25,6 @@ function launchMe() {
 
 function main() {
     hookKeys();
-
-    //github test
 
     // ----------------------------------------
     //     Canvas Setup
