@@ -1,0 +1,27 @@
+<!DOCTYPE html>	
+<title>DnD Tool</title>
+
+<html>
+	 
+	<body>
+	<canvas id="canvas" width = "800" height = "450">
+	You shouldn't see this.
+	</canvas>
+	<script src="DnD_Tool.js"></script>
+	<form method="post" action="demoform.asp">
+  		<label for="xScale">x-size 1-25:</label>
+  		<input type="range" name="xScale" id="xScale" value="25" min="1" max="25">
+  		<label for="yScale">y-size 1-25:</label>
+  		<input type="range" name="yScale" id="yScale" value="25" min="1" max="25">
+  		<DIV id="status">[Image loading status]</DIV>
+  		<DIV id="drop">Drop images here for players</DIV>
+  		<DIV id="list"></DIV>
+  		<body oncontextmenu="return false;">
+	</form>
+	</body>
+	<head>
+		<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="DnD_Tool.css">
+	</head>
+	
+</html>
