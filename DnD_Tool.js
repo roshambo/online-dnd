@@ -45,9 +45,15 @@ function main() {
     var y_tiles = 25;
     document.getElementById("xScale").onchange = function(event){
         x_tiles = event.target.value
+        if(center[0] > x_tiles){
+            center[0] = x_tiles;
+        }
     };
     document.getElementById("yScale").onchange = function(event){
         y_tiles = event.target.value
+        if(center[1] > y_tiles){
+            center[1] = y_tiles;
+        }
     };
     
 
@@ -372,10 +378,10 @@ function main() {
         c.fillText("x: " + x_tiles, (25), (canvasHeight) - 50);
         c.strokeText("y: " + y_tiles, (100), (canvasHeight) - 50);
         c.fillText("y: " + y_tiles, (100), (canvasHeight) - 50);
-        c.strokeText("x: " + playerPos[0], (200), (canvasHeight) - 50);
-        c.fillText("x: " + playerPos[0], (200), (canvasHeight) - 50);
-        c.strokeText("y: " + playerPos[1], (300), (canvasHeight) - 50);
-        c.fillText("y: " + playerPos[1], (300), (canvasHeight) - 50);
+        c.strokeText("x: " + center[0], (200), (canvasHeight) - 50);
+        c.fillText("x: " + center[0], (200), (canvasHeight) - 50);
+        c.strokeText("y: " + center[1], (300), (canvasHeight) - 50);
+        c.fillText("y: " + center[1], (300), (canvasHeight) - 50);
         c.strokeText("x: " + mousePosNorm[0], (400), (canvasHeight) - 50);
         c.fillText("x: " + mousePosNorm[0], (400), (canvasHeight) - 50);
         c.strokeText("y: " + mousePosNorm[1], (500), (canvasHeight) - 50);
@@ -410,51 +416,59 @@ function main() {
         window.addEventListener('keydown', function (evt) {
             switch (evt.keyCode) {
                 case keys.UP:
-                    center[1] -= 1;
-                    center[0] -= 1;
-                    for(var i = 1; i < playerPos.length; i += 3){
-                        playerPos[i] += 1;
-                        playerPos[i - 1] += 1;
-                    }
-                    for(var i = 0; i < shapePos.length; i += 2){
-                        shapePos[i] += 1;
-                        shapePos[i + 1] += 1;
+                    if(center[0] > 0 && center[1] > 0){
+                        center[1] -= 1;
+                        center[0] -= 1;
+                        for(var i = 1; i < playerPos.length; i += 3){
+                            playerPos[i] += 1;
+                            playerPos[i - 1] += 1;
+                        }
+                        for(var i = 0; i < shapePos.length; i += 2){
+                            shapePos[i] += 1;
+                            shapePos[i + 1] += 1;
+                        }
                     }
                     break;
                 case keys.DOWN:
-                    center[1] += 1;
-                    center[0] += 1;
-                    for(var i = 1; i < playerPos.length; i += 3){
-                        playerPos[i] -= 1;
-                        playerPos[i - 1] -= 1;
-                    }
-                    for(var i = 0; i < shapePos.length; i += 2){
-                        shapePos[i] -= 1;
-                        shapePos[i + 1] -= 1;
+                    if(center[0] < x_tiles && center[1] < y_tiles){
+                        center[1] += 1;
+                        center[0] += 1;
+                        for(var i = 1; i < playerPos.length; i += 3){
+                            playerPos[i] -= 1;
+                            playerPos[i - 1] -= 1;
+                        }
+                        for(var i = 0; i < shapePos.length; i += 2){
+                            shapePos[i] -= 1;
+                            shapePos[i + 1] -= 1;
+                        }
                     }
                     break;
                 case keys.LEFT:
-                    center[0] -= 1;
-                    center[1] += 1;
-                    for(var i = 0; i < playerPos.length; i += 3){
-                        playerPos[i] += 1;
-                        playerPos[i + 1] -= 1;
-                    }
-                    for(var i = 0; i < shapePos.length; i += 2){
-                        shapePos[i] += 1;
-                        shapePos[i + 1] -= 1;
-                    }
+                    if(center[0] > 0 && center[1] < y_tiles){
+                        center[0] -= 1;
+                        center[1] += 1;
+                        for(var i = 0; i < playerPos.length; i += 3){
+                            playerPos[i] += 1;
+                            playerPos[i + 1] -= 1;
+                        }
+                        for(var i = 0; i < shapePos.length; i += 2){
+                            shapePos[i] += 1;
+                            shapePos[i + 1] -= 1;
+                        }
+                    }   
                     break;
                 case keys.RIGHT:
-                    center[0] += 1;
-                    center[1] -= 1;
-                    for(var i = 0; i < playerPos.length; i += 3){
-                        playerPos[i] -= 1;
-                        playerPos[i + 1] += 1;
-                    }
-                    for(var i = 0; i < shapePos.length; i += 2){
-                        shapePos[i] -= 1;
-                        shapePos[i + 1] += 1;
+                    if(center[0] < x_tiles && center[1] > 0){
+                        center[0] += 1;
+                        center[1] -= 1;
+                        for(var i = 0; i < playerPos.length; i += 3){
+                            playerPos[i] -= 1;
+                            playerPos[i + 1] += 1;
+                        }
+                        for(var i = 0; i < shapePos.length; i += 2){
+                            shapePos[i] -= 1;
+                            shapePos[i + 1] += 1;
+                        }
                     }
                     break;
                 case keys.PLAYERUP:
@@ -619,7 +633,7 @@ function main() {
         mousePosNorm[0] = Math.floor(origPt[0] - center[0] + 0.5);
         mousePosNorm[1] = Math.floor(origPt[1] - center[1] + 0.5);
         removePlayer = false;
-        //text();
+        text();
     }
     animate();
 }
