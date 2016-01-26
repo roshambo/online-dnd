@@ -412,112 +412,79 @@ function main() {
         }
     }, false);
 
+    function moveBoard(x, y, shift){
+        center[1] += x;
+        center[0] += y;
+        for(var i = 0; i < playerPos.length; i += 3){
+            playerPos[i] += ((-x)*shift);
+            playerPos[i + 1] += ((-y)*shift);
+        }
+        for(var i = 0; i < shapePos.length; i += 2){
+            shapePos[i] += (-x)*shift;
+            shapePos[i + 1] += (-y)*shift;
+        }
+    }
+
+    function movePlayer(axis, x, y){
+        var stuck = false;
+        for(var i = 2; i < playerPos.length; i += 3){
+            if(playerPos[i] == 1 && playerPos[i - 1] + center[1] + 1 > 0 && playerPos[i - 1] + center[1] < y_tiles){
+                if(playerPos[i - 2] + center[0] + 1 > 0 && playerPos[i - 2] + center[0] < x_tiles){
+                    for(var k = 0; k < playerPos.length; k += 3){
+                        if(playerPos[i - 2] + x == playerPos[k] && playerPos[i - 1] + y == playerPos[k + 1]){
+                            return;
+                        }
+                    }
+                    playerPos[i - axis] += (x + y);
+                    stuck = true;
+                }
+            }
+            if(playerPos[i] == 1 && playerPos[i - 1] + center[1] == -1 || playerPos[i - 2] + center[0] == -1 && stuck == false){
+                if(x == 0 || y == 0){
+                    console.log("hi");
+                    playerPos[i - axis] -= (x + y);
+                }
+            }
+            if(playerPos[i - 2] + center[0] == -1){
+                playerPos[i - 2]++;
+            }
+        }
+    }
+
     function hookKeys() {
         window.addEventListener('keydown', function (evt) {
             switch (evt.keyCode) {
                 case keys.UP:
                     if(center[0] > 0 && center[1] > 0){
-                        center[1] -= 1;
-                        center[0] -= 1;
-                        for(var i = 1; i < playerPos.length; i += 3){
-                            playerPos[i] += 1;
-                            playerPos[i - 1] += 1;
-                        }
-                        for(var i = 0; i < shapePos.length; i += 2){
-                            shapePos[i] += 1;
-                            shapePos[i + 1] += 1;
-                        }
+                        moveBoard(-1, -1, 1);
                     }
                     break;
                 case keys.DOWN:
                     if(center[0] < x_tiles && center[1] < y_tiles){
-                        center[1] += 1;
-                        center[0] += 1;
-                        for(var i = 1; i < playerPos.length; i += 3){
-                            playerPos[i] -= 1;
-                            playerPos[i - 1] -= 1;
-                        }
-                        for(var i = 0; i < shapePos.length; i += 2){
-                            shapePos[i] -= 1;
-                            shapePos[i + 1] -= 1;
-                        }
+                        moveBoard(1, 1, 1);
                     }
                     break;
                 case keys.LEFT:
                     if(center[0] > 0 && center[1] < y_tiles){
-                        center[0] -= 1;
-                        center[1] += 1;
-                        for(var i = 0; i < playerPos.length; i += 3){
-                            playerPos[i] += 1;
-                            playerPos[i + 1] -= 1;
-                        }
-                        for(var i = 0; i < shapePos.length; i += 2){
-                            shapePos[i] += 1;
-                            shapePos[i + 1] -= 1;
-                        }
+                        moveBoard(1, -1, -1);
                     }   
                     break;
                 case keys.RIGHT:
                     if(center[0] < x_tiles && center[1] > 0){
-                        center[0] += 1;
-                        center[1] -= 1;
-                        for(var i = 0; i < playerPos.length; i += 3){
-                            playerPos[i] -= 1;
-                            playerPos[i + 1] += 1;
-                        }
-                        for(var i = 0; i < shapePos.length; i += 2){
-                            shapePos[i] -= 1;
-                            shapePos[i + 1] += 1;
-                        }
+                        moveBoard(-1, 1, -1);
                     }
                     break;
                 case keys.PLAYERUP:
-                    for(var i = 2; i < playerPos.length; i += 3){
-                        if(playerPos[i] == 1 && playerPos[i - 1] + center[1] > 0){
-                            for(var k = 0; k < playerPos.length; k += 3){
-                                if(playerPos[i - 2] == playerPos[k] && playerPos[i - 1] - 1 == playerPos[k + 1]){
-                                    return;
-                                }
-                            }
-                            playerPos[i - 1] -= 1;
-                        }
-                    }
+                    movePlayer(1, 0, -1);
                     break;
                 case keys.PLAYERDOWN:
-                    for(var i = 2; i < playerPos.length; i += 3){
-                        if(playerPos[i] == 1 && playerPos[i - 1] + center[1] < y_tiles - 1){
-                            for(var k = 0; k < playerPos.length; k += 3){
-                                if(playerPos[i - 2] == playerPos[k] && playerPos[i - 1] + 1 == playerPos[k + 1]){
-                                    return;
-                                }
-                            }
-                            playerPos[i - 1] += 1;
-                        }
-                    }
+                    movePlayer(1, 0, 1);
                     break;
                 case keys.PLAYERLEFT:
-                    for(var i = 2; i < playerPos.length; i += 3){
-                        if(playerPos[i] == 1 && playerPos[i - 2] + center[0] > 0){
-                            for(var k = 0; k < playerPos.length; k += 3){
-                                if(playerPos[i - 2] - 1 == playerPos[k] && playerPos[i - 1] == playerPos[k + 1]){
-                                    return;
-                                }
-                            }
-                            playerPos[i - 2] -= 1;
-                        }
-                    }
+                    movePlayer(2, -1, 0);
                     break;
                 case keys.PLAYERRIGHT:
-                    for(var i = 2; i < playerPos.length; i += 3){
-                        if(playerPos[i] == 1 && playerPos[i - 2] + center[0] < x_tiles - 1){
-                            for(var k = 0; k < playerPos.length; k += 3){
-                                if(playerPos[i - 2] + 1 == playerPos[k] && playerPos[i - 1] == playerPos[k + 1]){
-                                    return;
-                                }
-                            }
-                            playerPos[i - 2] += 1;
-                        }
-                    }
+                    movePlayer(2, 1, 0);
                     break;
                 case keys.REMOVEPLAYER:
                     removePlayer = true;
@@ -581,6 +548,15 @@ function main() {
         }
     }
 
+    function removeCharacter(){
+        for (var i = 0; i < playerPos.length; i += 3){
+            if(playerPos[i] == mousePosNorm[0] && playerPos[i + 1] == mousePosNorm[1]){
+                playerPos.splice(i, 3);
+                break;
+            }
+        }
+    }
+
     // ----------------------------------------
     //     Animation / keeps running
     // ----------------------------------------
@@ -610,12 +586,7 @@ function main() {
             removeShapes();
         } 
         if(removePlayer){
-            for (var i = 0; i < playerPos.length; i += 3){
-                if(playerPos[i] == mousePosNorm[0] && playerPos[i + 1] == mousePosNorm[1]){
-                    playerPos.splice(i, 3);
-                    break;
-                }
-            }
+            removeCharacter()
         }
         for(var i = 0; i < playerPos.length; i += 3){
             if(playerPos[i] + center[0] >= x_tiles){
