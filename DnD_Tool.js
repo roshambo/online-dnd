@@ -46,17 +46,34 @@ function main() {
     document.getElementById("xScale").onchange = function(event){
         x_tiles = event.target.value
         if(center[0] > x_tiles){
+            var xShift = center[0] - Math.floor(x_tiles/2)
             center[0] = Math.floor(x_tiles/2);
+            for(var i = 0; i < playerPos.length; i += 3){
+                if(playerPos[i] + center[0] < 0){
+                    playerPos[i] = center[0];  
+                }
+            }
+            for(var i = 0; i < shapePos.length; i += 2){
+                shapePos[i] += xShift;
+            }
         }
     };
     document.getElementById("yScale").onchange = function(event){
         y_tiles = event.target.value
         if(center[1] > y_tiles){
+            var yShift = center[0] - Math.floor(y_tiles/2)
             center[1] = Math.floor(y_tiles/2);
+            for(var i = 0; i < playerPos.length; i += 3){
+                if(playerPos[i + 1] + center[1] < 0){
+                    playerPos[i + 1] = center[1];  
+                }
+            }
+            for(var i = 0; i < shapePos.length; i += 2){
+                shapePos[i + 1] += yShift;
+            }
         }
     };
     
-
     var tileCount = 0;
     var tileMap = new Array();
     for (x = 0; x < x_tiles; x++) {
@@ -386,6 +403,10 @@ function main() {
         c.fillText("x: " + mousePosNorm[0], (400), (canvasHeight) - 50);
         c.strokeText("y: " + mousePosNorm[1], (500), (canvasHeight) - 50);
         c.fillText("y: " + mousePosNorm[1], (500), (canvasHeight) - 50);
+        c.strokeText("x: " + playerPos[0], (600), (canvasHeight) - 50);
+        c.fillText("x: " + playerPos[0], (600), (canvasHeight) - 50);
+        c.strokeText("y: " + playerPos[1], (700), (canvasHeight) - 50);
+        c.fillText("y: " + playerPos[1], (700), (canvasHeight) - 50);
     }
     text();
 
@@ -439,14 +460,14 @@ function main() {
                     stuck = true;
                 }
             }
-            if(playerPos[i] == 1 && playerPos[i - 1] + center[1] == -1 || playerPos[i - 2] + center[0] == -1 && stuck == false){
-                if(x == 0 || y == 0){
-                    playerPos[i - axis] -= (x + y);
-                }
+            //Hard coded/////
+            if(playerPos[i - 1] + center[1] == -1){
+                playerPos[i - axis] -= (x + y);
             }
             if(playerPos[i - 2] + center[0] == -1){
                 playerPos[i - 2]++;
             }
+            /////////////////
         }
     }
 
@@ -573,7 +594,6 @@ function main() {
         pt[0] /= norm;
         pt[1] /= norm;
         revertVector(pt);
-
         if(mouseDown){
             putCharacters();
             mouseDown = false;
@@ -595,7 +615,6 @@ function main() {
                 playerPos[i + 1]--;
             }
         }
-
         c.clearRect(0, 0, canvasWidth, canvasHeight);
         drawTiles(center);
         revertPoint(origPt, center);
