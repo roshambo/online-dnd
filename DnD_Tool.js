@@ -61,7 +61,7 @@ function main() {
     document.getElementById("yScale").onchange = function(event){
         y_tiles = event.target.value
         if(center[1] > y_tiles){
-            var yShift = center[0] - Math.floor(y_tiles/2)
+            var yShift = center[1] - Math.floor(y_tiles/2)
             center[1] = Math.floor(y_tiles/2);
             for(var i = 0; i < playerPos.length; i += 3){
                 if(playerPos[i + 1] + center[1] < 0){
@@ -73,14 +73,13 @@ function main() {
             }
         }
     };
-    
     var tileCount = 0;
     var tileMap = new Array();
     for (x = 0; x < x_tiles; x++) {
         var row = new Array();
         for (y = 0; y < y_tiles; y++) {
-            //row[y] = x * 20 + y * 30 + 0 | (Math.random() * 20);
-            row[y] = x*20;
+            row[y] = x * 20 + y * 30 + 0 | (Math.random() * 20);
+            //row[y] = x*20;
             tileCount++;
         }
         tileMap[x] = row;
