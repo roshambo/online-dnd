@@ -19,7 +19,7 @@ html, body {
 
 #drop {  
   position: fixed;
-  top: 38px;
+  top: 200px;
   right: 1px;
   min-height: 195px;
   width: 456px;
