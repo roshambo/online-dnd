@@ -46,13 +46,13 @@ function main() {
     document.getElementById("xScale").onchange = function(event){
         x_tiles = event.target.value
         if(center[0] > x_tiles){
-            center[0] = x_tiles;
+            center[0] = Math.floor(x_tiles/2);
         }
     };
     document.getElementById("yScale").onchange = function(event){
         y_tiles = event.target.value
         if(center[1] > y_tiles){
-            center[1] = y_tiles;
+            center[1] = Math.floor(y_tiles/2);
         }
     };
     
@@ -441,7 +441,6 @@ function main() {
             }
             if(playerPos[i] == 1 && playerPos[i - 1] + center[1] == -1 || playerPos[i - 2] + center[0] == -1 && stuck == false){
                 if(x == 0 || y == 0){
-                    console.log("hi");
                     playerPos[i - axis] -= (x + y);
                 }
             }
@@ -604,7 +603,7 @@ function main() {
         mousePosNorm[0] = Math.floor(origPt[0] - center[0] + 0.5);
         mousePosNorm[1] = Math.floor(origPt[1] - center[1] + 0.5);
         removePlayer = false;
-        text();
+        //text();
     }
     animate();
 }
