@@ -45,19 +45,41 @@ function main() {
     var y_tiles = 25;
     document.getElementById("xScale").onchange = function(event){
         x_tiles = event.target.value
+        if(center[0] > x_tiles){
+            var xShift = center[0] - Math.floor(x_tiles/2)
+            center[0] = Math.floor(x_tiles/2);
+            for(var i = 0; i < playerPos.length; i += 3){
+                if(playerPos[i] + center[0] < 0){
+                    playerPos[i] = center[0];  
+                }
+            }
+            for(var i = 0; i < shapePos.length; i += 2){
+                shapePos[i] += xShift;
+            }
+        }
     };
     document.getElementById("yScale").onchange = function(event){
         y_tiles = event.target.value
+        if(center[1] > y_tiles){
+            var yShift = center[1] - Math.floor(y_tiles/2)
+            center[1] = Math.floor(y_tiles/2);
+            for(var i = 0; i < playerPos.length; i += 3){
+                if(playerPos[i + 1] + center[1] < 0){
+                    playerPos[i + 1] = center[1];  
+                }
+            }
+            for(var i = 0; i < shapePos.length; i += 2){
+                shapePos[i + 1] += yShift;
+            }
+        }
     };
-    
-
     var tileCount = 0;
     var tileMap = new Array();
     for (x = 0; x < x_tiles; x++) {
         var row = new Array();
         for (y = 0; y < y_tiles; y++) {
-            //row[y] = x * 20 + y * 30 + 0 | (Math.random() * 20);
-            row[y] = x*20;
+            row[y] = x * 20 + y * 30 + 0 | (Math.random() * 20);
+            //row[y] = x*20;
             tileCount++;
         }
         tileMap[x] = row;
@@ -372,14 +394,18 @@ function main() {
         c.fillText("x: " + x_tiles, (25), (canvasHeight) - 50);
         c.strokeText("y: " + y_tiles, (100), (canvasHeight) - 50);
         c.fillText("y: " + y_tiles, (100), (canvasHeight) - 50);
-        c.strokeText("x: " + playerPos[0], (200), (canvasHeight) - 50);
-        c.fillText("x: " + playerPos[0], (200), (canvasHeight) - 50);
-        c.strokeText("y: " + playerPos[1], (300), (canvasHeight) - 50);
-        c.fillText("y: " + playerPos[1], (300), (canvasHeight) - 50);
+        c.strokeText("x: " + center[0], (200), (canvasHeight) - 50);
+        c.fillText("x: " + center[0], (200), (canvasHeight) - 50);
+        c.strokeText("y: " + center[1], (300), (canvasHeight) - 50);
+        c.fillText("y: " + center[1], (300), (canvasHeight) - 50);
         c.strokeText("x: " + mousePosNorm[0], (400), (canvasHeight) - 50);
         c.fillText("x: " + mousePosNorm[0], (400), (canvasHeight) - 50);
         c.strokeText("y: " + mousePosNorm[1], (500), (canvasHeight) - 50);
         c.fillText("y: " + mousePosNorm[1], (500), (canvasHeight) - 50);
+        c.strokeText("x: " + playerPos[0], (600), (canvasHeight) - 50);
+        c.fillText("x: " + playerPos[0], (600), (canvasHeight) - 50);
+        c.strokeText("y: " + playerPos[1], (700), (canvasHeight) - 50);
+        c.fillText("y: " + playerPos[1], (700), (canvasHeight) - 50);
     }
     text();
 
@@ -399,104 +425,85 @@ function main() {
         REMOVEPLAYER: 8
     };
 
+    window.addEventListener("keydown", function(e) {
+    // space and arrow keys
+        if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+            e.preventDefault();
+        }
+    }, false);
+
+    function moveBoard(x, y, shift){
+        center[1] += x;
+        center[0] += y;
+        for(var i = 0; i < playerPos.length; i += 3){
+            playerPos[i] += ((-x)*shift);
+            playerPos[i + 1] += ((-y)*shift);
+        }
+        for(var i = 0; i < shapePos.length; i += 2){
+            shapePos[i] += (-x)*shift;
+            shapePos[i + 1] += (-y)*shift;
+        }
+    }
+
+    function movePlayer(axis, x, y){
+        var stuck = false;
+        for(var i = 2; i < playerPos.length; i += 3){
+            if(playerPos[i] == 1 && playerPos[i - 1] + center[1] + 1 > 0 && playerPos[i - 1] + center[1] < y_tiles){
+                if(playerPos[i - 2] + center[0] + 1 > 0 && playerPos[i - 2] + center[0] < x_tiles){
+                    for(var k = 0; k < playerPos.length; k += 3){
+                        if(playerPos[i - 2] + x == playerPos[k] && playerPos[i - 1] + y == playerPos[k + 1]){
+                            return;
+                        }
+                    }
+                    playerPos[i - axis] += (x + y);
+                    stuck = true;
+                }
+            }
+            //Hard coded/////
+            if(playerPos[i - 1] + center[1] == -1){
+                playerPos[i - axis] -= (x + y);
+            }
+            if(playerPos[i - 2] + center[0] == -1){
+                playerPos[i - 2]++;
+            }
+            /////////////////
+        }
+    }
+
     function hookKeys() {
         window.addEventListener('keydown', function (evt) {
             switch (evt.keyCode) {
                 case keys.UP:
-                    center[1] -= 1;
-                    center[0] -= 1;
-                    for(var i = 1; i < playerPos.length; i += 3){
-                        playerPos[i] += 1;
-                        playerPos[i - 1] += 1;
-                    }
-                    for(var i = 0; i < shapePos.length; i += 2){
-                        shapePos[i] += 1;
-                        shapePos[i + 1] += 1;
+                    if(center[0] > 0 && center[1] > 0){
+                        moveBoard(-1, -1, 1);
                     }
                     break;
                 case keys.DOWN:
-                    center[1] += 1;
-                    center[0] += 1;
-                    for(var i = 1; i < playerPos.length; i += 3){
-                        playerPos[i] -= 1;
-                        playerPos[i - 1] -= 1;
-                    }
-                    for(var i = 0; i < shapePos.length; i += 2){
-                        shapePos[i] -= 1;
-                        shapePos[i + 1] -= 1;
+                    if(center[0] < x_tiles && center[1] < y_tiles){
+                        moveBoard(1, 1, 1);
                     }
                     break;
                 case keys.LEFT:
-                    center[0] -= 1;
-                    center[1] += 1;
-                    for(var i = 0; i < playerPos.length; i += 3){
-                        playerPos[i] += 1;
-                        playerPos[i + 1] -= 1;
-                    }
-                    for(var i = 0; i < shapePos.length; i += 2){
-                        shapePos[i] += 1;
-                        shapePos[i + 1] -= 1;
-                    }
+                    if(center[0] > 0 && center[1] < y_tiles){
+                        moveBoard(1, -1, -1);
+                    }   
                     break;
                 case keys.RIGHT:
-                    center[0] += 1;
-                    center[1] -= 1;
-                    for(var i = 0; i < playerPos.length; i += 3){
-                        playerPos[i] -= 1;
-                        playerPos[i + 1] += 1;
-                    }
-                    for(var i = 0; i < shapePos.length; i += 2){
-                        shapePos[i] -= 1;
-                        shapePos[i + 1] += 1;
+                    if(center[0] < x_tiles && center[1] > 0){
+                        moveBoard(-1, 1, -1);
                     }
                     break;
                 case keys.PLAYERUP:
-                    for(var i = 2; i < playerPos.length; i += 3){
-                        if(playerPos[i] == 1 && playerPos[i - 1] + center[1] > 0){
-                            for(var k = 0; k < playerPos.length; k += 3){
-                                if(playerPos[i - 2] == playerPos[k] && playerPos[i - 1] - 1 == playerPos[k + 1]){
-                                    return;
-                                }
-                            }
-                            playerPos[i - 1] -= 1;
-                        }
-                    }
+                    movePlayer(1, 0, -1);
                     break;
                 case keys.PLAYERDOWN:
-                    for(var i = 2; i < playerPos.length; i += 3){
-                        if(playerPos[i] == 1 && playerPos[i - 1] + center[1] < y_tiles - 1){
-                            for(var k = 0; k < playerPos.length; k += 3){
-                                if(playerPos[i - 2] == playerPos[k] && playerPos[i - 1] + 1 == playerPos[k + 1]){
-                                    return;
-                                }
-                            }
-                            playerPos[i - 1] += 1;
-                        }
-                    }
+                    movePlayer(1, 0, 1);
                     break;
                 case keys.PLAYERLEFT:
-                    for(var i = 2; i < playerPos.length; i += 3){
-                        if(playerPos[i] == 1 && playerPos[i - 2] + center[0] > 0){
-                            for(var k = 0; k < playerPos.length; k += 3){
-                                if(playerPos[i - 2] - 1 == playerPos[k] && playerPos[i - 1] == playerPos[k + 1]){
-                                    return;
-                                }
-                            }
-                            playerPos[i - 2] -= 1;
-                        }
-                    }
+                    movePlayer(2, -1, 0);
                     break;
                 case keys.PLAYERRIGHT:
-                    for(var i = 2; i < playerPos.length; i += 3){
-                        if(playerPos[i] == 1 && playerPos[i - 2] + center[0] < x_tiles - 1){
-                            for(var k = 0; k < playerPos.length; k += 3){
-                                if(playerPos[i - 2] + 1 == playerPos[k] && playerPos[i - 1] == playerPos[k + 1]){
-                                    return;
-                                }
-                            }
-                            playerPos[i - 2] += 1;
-                        }
-                    }
+                    movePlayer(2, 1, 0);
                     break;
                 case keys.REMOVEPLAYER:
                     removePlayer = true;
@@ -560,6 +567,15 @@ function main() {
         }
     }
 
+    function removeCharacter(){
+        for (var i = 0; i < playerPos.length; i += 3){
+            if(playerPos[i] == mousePosNorm[0] && playerPos[i + 1] == mousePosNorm[1]){
+                playerPos.splice(i, 3);
+                break;
+            }
+        }
+    }
+
     // ----------------------------------------
     //     Animation / keeps running
     // ----------------------------------------
@@ -577,7 +593,6 @@ function main() {
         pt[0] /= norm;
         pt[1] /= norm;
         revertVector(pt);
-
         if(mouseDown){
             putCharacters();
             mouseDown = false;
@@ -589,12 +604,7 @@ function main() {
             removeShapes();
         } 
         if(removePlayer){
-            for (var i = 0; i < playerPos.length; i += 3){
-                if(playerPos[i] == mousePosNorm[0] && playerPos[i + 1] == mousePosNorm[1]){
-                    playerPos.splice(i, 3);
-                    break;
-                }
-            }
+            removeCharacter()
         }
         for(var i = 0; i < playerPos.length; i += 3){
             if(playerPos[i] + center[0] >= x_tiles){
@@ -604,7 +614,6 @@ function main() {
                 playerPos[i + 1]--;
             }
         }
-
         c.clearRect(0, 0, canvasWidth, canvasHeight);
         drawTiles(center);
         revertPoint(origPt, center);
@@ -664,9 +673,9 @@ if(window.FileReader) {
                 newFile.innerHTML = 'Loaded : '+file.name+' size '+file.size+' B';
                 list.appendChild(newFile);  
                 var fileNumber = list.getElementsByTagName('div').length;
-                status.innerHTML = fileNumber < files.length 
-                    ? 'Loaded 100% of file '+fileNumber+' of '+files.length+'...' 
-                    : 'Done loading. processed '+fileNumber+' files.';
+                //status.innerHTML = fileNumber < files.length 
+                //    ? 'Loaded 100% of file '+fileNumber+' of '+files.length+'...' 
+                //    : 'Done loading. processed '+fileNumber+' files.';
 
                 var image = document.createElement("img"); 
                 image.file = file;   
