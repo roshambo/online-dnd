@@ -674,9 +674,9 @@ if(window.FileReader) {
                 newFile.innerHTML = 'Loaded : '+file.name+' size '+file.size+' B';
                 list.appendChild(newFile);  
                 var fileNumber = list.getElementsByTagName('div').length;
-                status.innerHTML = fileNumber < files.length 
-                    ? 'Loaded 100% of file '+fileNumber+' of '+files.length+'...' 
-                    : 'Done loading. processed '+fileNumber+' files.';
+                //status.innerHTML = fileNumber < files.length 
+                //    ? 'Loaded 100% of file '+fileNumber+' of '+files.length+'...' 
+                //    : 'Done loading. processed '+fileNumber+' files.';
 
                 var image = document.createElement("img"); 
                 image.file = file;   
