@@ -1,12 +1,3 @@
-/*
-Left Click to add players
-Right Click to draw shapes
-Middle Click to delete shapes
-Hover over character and press backspace to delete character
-Drag images to customize characters
-Note: Need to clean up code and need to implement custom board
-*/
-
 var resCount = 2;
 
 var img = new Image();
@@ -24,6 +15,15 @@ function launchMe() {
 
 function main() {
     hookKeys();
+    var temp;
+    var url='getData.html';
+    var boardUrl = 'getBoardData.html'
+    var npcUrl = 'getNPCData.html'
+    var colorUrl = 'getColorData.html'
+    var info = new Array();
+    var usernames = new Array();
+    var npcInfo = new Array();
+    var npcNames = new Array();
 
     // ----------------------------------------
     //     Canvas Setup
@@ -43,36 +43,7 @@ function main() {
 
     var x_tiles = 25;
     var y_tiles = 25;
-    document.getElementById("xScale").onchange = function(event){
-        x_tiles = event.target.value
-        if(center[0] > x_tiles){
-            var xShift = center[0] - Math.floor(x_tiles/2)
-            center[0] = Math.floor(x_tiles/2);
-            for(var i = 0; i < playerPos.length; i += 3){
-                if(playerPos[i] + center[0] < 0){
-                    playerPos[i] = center[0];  
-                }
-            }
-            for(var i = 0; i < shapePos.length; i += 2){
-                shapePos[i] += xShift;
-            }
-        }
-    };
-    document.getElementById("yScale").onchange = function(event){
-        y_tiles = event.target.value
-        if(center[1] > y_tiles){
-            var yShift = center[1] - Math.floor(y_tiles/2)
-            center[1] = Math.floor(y_tiles/2);
-            for(var i = 0; i < playerPos.length; i += 3){
-                if(playerPos[i + 1] + center[1] < 0){
-                    playerPos[i + 1] = center[1];  
-                }
-            }
-            for(var i = 0; i < shapePos.length; i += 2){
-                shapePos[i + 1] += yShift;
-            }
-        }
-    };
+
     var tileCount = 0;
     var tileMap = new Array();
     for (x = 0; x < x_tiles; x++) {
@@ -93,9 +64,9 @@ function main() {
     var displayCenterX = 1 * canvas.width / 3;
     var displayCenterY = 2 * canvas.height / 3;
     // angle of the x axis. Should be in [0, PI/2]
-    var angleX = Math.PI/4; // Math.PI/6
+    var angleX = Math.PI/4; // Math.PI/4
     // angle of the y axis. Should be in [PI/2, PI]
-    var angleY = Math.PI/2 + Math.PI/4; //2.8
+    var angleY = Math.PI/2 + Math.PI/4; //Math.PI/2 + Math.PI/4
     // scale for the tiles
     var scale = 50.0;
     // relative scale for the x of the tile. use it to stretch tiles.
@@ -103,17 +74,17 @@ function main() {
     //for textures
     var experimental_useBitmapTiles = false;
     // how many tiles do we show in the back ?
-    var viewBackDepth = 20;  //20
+    var viewBackDepth = 25;  //20
     // how many tiles do we show in the front ?
     var viewFrontDepth = 18;  //18
     // how many tiles do we show on the left ?
     var viewLeftDepth = 9;  //9
     // how many tiles do we show on the right ?
-    var viewRightDepth = 20; //20
+    var viewRightDepth = 25; //20
     // tile offset from 0,0 at which we start shadowing.
-    var shadowStart = 9; //9
+    var shadowStart = 12; //9
     // at shadowStart + shadowLength, tiles are black.
-    var shadowLength = 12; //12
+    var shadowLength = 13; //12
     // for 3D
     var enable3dEffect = true;
     // zShift : bigger means less influence for z
@@ -199,34 +170,74 @@ function main() {
                          transfMatrix[2],transfMatrix[3],
                          displayCenterX, displayCenterY);
     }
-    
+
     // draw player at point coord. 
     // if 3d, third coord is understood as scale.
     var playerPos = [];
-    function drawPlayer(pt, alpha, imgNum, highlightBool) {
+    var shapePos = [];
+    var npcPos = [];
+    function drawPlayer(pt, alpha, imgNum, highlightBool, playerNum, x, y) {
         c.save();
         c.translate(pt[0], pt[1]);
+        var color1 = usernames[imgNum].charCodeAt(0);
+        var color2 = usernames[imgNum].charCodeAt(1);
+        var color3 = usernames[imgNum].charCodeAt(2);
         if (enable3dEffect) {
                 c.scale(pt[2], pt[2]);
         }
         if (alpha < 1.0) c.globalAlpha = alpha;
-        if(highlightBool){
-            c.fillStyle = "rgba(255, 255, 255, 1.0)";
-            c.fillRect(-14, -19, 26, 26);
-        }
+        //if(highlightBool){
+            //c.fillStyle = "rgba(255, 255, 255, 1.0)";
+            //c.fillRect(-14, -19, 26, 26);
+        //}
         if(imgListLength > 0 && imgNum < imgListLength ){
             if (imgList[imgNum] != undefined){
                 c.drawImage(imgList[imgNum], -12, -17, 22, 22);
             }
         }
         else{
-            c.fillStyle = "rgba(150, 150, 150, 1.0)";
+            c.fillStyle = 'rgba('+ color1 +',' + color2 +',' + color3 +', 1.0)';
             c.fillRect(-12, -17, 22, 22);
-        }   
+        }
+        c.strokeStyle = "rgba(0, 0, 0, 1.0)";
+        c.fillStyle = "rgba(255, 255, 255, 1.0)";
+        c.textAlign="center";
+        c.strokeText(usernames[imgNum], 0, -30);
+        c.fillText(usernames[imgNum], 0, -30);
+        c.strokeText(x + center[0] + ",  ", -5, -40);
+        c.fillText(x + center[0] + ",  ", -5, -40);
+        c.strokeText(y + center[1], 5, -40);
+        c.fillText(y + center[1], 5, -40);
         c.restore();
     }
 
-    var shapePos = [];
+    function drawOther(pt, alpha, imgNum, highlightBool, playerNum, x, y) {
+        c.save();
+        c.translate(pt[0], pt[1]);
+        if (enable3dEffect) {
+                c.scale(pt[2], pt[2]);
+        }
+        if (alpha < 1.0) c.globalAlpha = alpha;
+        if(imgListLength > 0 && imgNum < imgListLength ){
+            if (imgList[imgNum] != undefined){
+                c.drawImage(imgList[imgNum], -12, -17, 22, 22);
+            }
+        }
+        else{
+            c.fillStyle = "rgba(50, 50, 50, 1.0)";
+            c.fillRect(-12, -17, 22, 22);
+        }
+        c.strokeStyle = "rgba(0, 0, 0, 1.0)";
+        c.fillStyle = "rgba(255, 255, 255, 1.0)";
+        c.textAlign="center";
+        c.strokeText(npcNames[imgNum], 0, -30);
+        c.fillText(npcNames[imgNum], 0, -30);
+        c.strokeText(x + center[0] + ",  ", -5, -40);
+        c.fillText(x + center[0] + ",  ", -5, -40);
+        c.strokeText(y + center[1], 5, -40);
+        c.fillText(y + center[1], 5, -40);
+        c.restore();
+    }
 
     function drawFilledTile(colOffset, rowOffset, tileValue) {
         tileValue = tileValue  % 16;
@@ -239,21 +250,29 @@ function main() {
                 //colOffset - 0.5, rowOffset - 0.5, 1, 1);
     }
 
+    var r = 2;
+    var g = 5;
+    var b = 7;
     // draw a tile at (colOffset, rowOffset ) centered world coordinates.
     function drawTile(colOffset, rowOffset, tileValue) {
         var pt = [0, 0];
         c.beginPath();
+        var x = colOffset+center[0];
+        var y = rowOffset+center[1];
+        var rFill = (colOffset+center[0])*r;
+        var gFill = (rowOffset+center[1])*g;
+        var bFill = (colOffset+center[0])*b
         for(var i = 0; i < shapePos.length; i += 2){
             if(colOffset == shapePos[i] && rowOffset == shapePos[i + 1]){
-                c.fillStyle = "rgba(0, 100, 150, 1.0)";
+                c.fillStyle = 'rgba('+ (y)*(b+10) +',' + (x)*(r+10) +','+ (y)*(g+10) +', 0.5)';
                 break;
             }
             else{
-                c.fillStyle = 'hsl(' + (tileValue) + ',75%,75%)';
+                c.fillStyle = 'rgba('+ rFill +',' + gFill +','+ bFill +', 1.0)';
             }
         }
         if(shapePos.length == 0){
-            c.fillStyle = 'hsl(' + (tileValue) + ',75%,75%)';
+            c.fillStyle = 'rgba('+ rFill +',' + gFill +','+ bFill +', 1.0)';
         }
         projectFromCenter(colOffset - 0.5, rowOffset - 0.5, pt);
         if (pt[1] > canvasHeight) return;
@@ -273,17 +292,36 @@ function main() {
         c.fill();
         c.closePath();
         c.fillStyle = '#000';
-        c.globalAlpha = 1.0;
+        //c.globalAlpha = 1.0;
+        c.globalAlpha = alpha + 0.05;
         projectFromCenter(colOffset, rowOffset, pt);
         for(var i = 0; i < playerPos.length; i += 3){
             if(colOffset == playerPos[i] && rowOffset == playerPos[i + 1]){
                 if(playerPos[i + 2] == 1){
-                    drawPlayer(pt, alpha + 0.05, i/3, true);
+                    drawPlayer(pt, alpha + 0.05, i/3, true, i, colOffset, rowOffset);
                 }
                 else{
-                    drawPlayer(pt, alpha + 0.05, i/3, false);
-                }                   
+                    drawPlayer(pt, alpha + 0.05, i/3, false, i, colOffset, rowOffset);
+                }
             }
+        }
+        for(var i = 0; i < npcPos.length; i += 2){
+            if(colOffset == npcPos[i] && rowOffset == npcPos[i + 1]){
+                if(npcPos[i + 2] == 1){
+                    drawOther(pt, alpha + 0.05, i/2, true, i, colOffset, rowOffset);
+                }
+                else{
+                    drawOther(pt, alpha + 0.05, i/2, false, i, colOffset, rowOffset);
+                }
+            }
+        }
+        c.fillStyle = "rgba(200, 200, 200, 1.0)";
+        c.strokeStyle = "rgba(0, 0, 0, 1.0)";
+        c.textAlign="center";
+        c.font = "10px Arial";
+        if(((colOffset + center[0] + 1) % 5 == 0 || (colOffset + center[0]) == x_tiles - 1 || (colOffset + center[0]) == 0) && ((rowOffset + center[1] + 1) % 5 == 0 || (rowOffset + center[1]) == y_tiles - 1 || (rowOffset + center[1]) == 0)){
+            c.strokeText((0 |colOffset + center[0] + 1) + ', ' + (0|rowOffset + center[1] + 1), pt[0], pt[1] - 10);
+            c.fillText((0 |colOffset + center[0] + 1) + ', ' + (0|rowOffset + center[1] + 1), pt[0], pt[1] - 10);
         }
     }
 
@@ -308,7 +346,7 @@ function main() {
         if ((rowEnd < 0) || (rowStart >= y_tiles)) return;
         if (rowStart < 0) rowStart = 0;
         if (rowEnd >= y_tiles) rowEnd = y_tiles;
-        
+
         if (experimental_useBitmapTiles) {
             c.save();
             setWorldTransform();
@@ -328,7 +366,7 @@ function main() {
             }
         }
         if (experimental_useBitmapTiles) c.restore();
-
+        c.textAlign="center";
     }
 
     var center = [x_tiles - 5, y_tiles - 5];
@@ -386,10 +424,10 @@ function main() {
     // ----------------------------------------
 
     function text(){
-        c.lineWidth = 10;
-        c.fillStyle = 'rgba(255, 255, 255, 0.75)';
-        c.strokeStyle = 'rgba(0, 0, 0, 0.75)';
-        c.font = "25px Arial";
+        c.lineWidth = 3;
+        c.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        c.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+        c.font = "15px Arial";
         c.strokeText("x: " + x_tiles, (25), (canvasHeight) - 50);
         c.fillText("x: " + x_tiles, (25), (canvasHeight) - 50);
         c.strokeText("y: " + y_tiles, (100), (canvasHeight) - 50);
@@ -414,10 +452,10 @@ function main() {
     // ----------------------------------------
 
     var keys = {
-        LEFT: 65,
-        UP: 87,
-        RIGHT: 68,
-        DOWN: 83,
+        LEFT: 37,
+        UP: 38,
+        RIGHT: 39,
+        DOWN: 40,
         PLAYERLEFT: 37,
         PLAYERUP: 38,
         PLAYERRIGHT: 39,
@@ -442,6 +480,10 @@ function main() {
         for(var i = 0; i < shapePos.length; i += 2){
             shapePos[i] += (-x)*shift;
             shapePos[i + 1] += (-y)*shift;
+        }
+        for(var i = 0; i < npcPos.length; i += 2){
+            npcPos[i] += (-x)*shift;
+            npcPos[i + 1] += (-y)*shift;
         }
     }
 
@@ -523,7 +565,7 @@ function main() {
             if(playerPos[i] == mousePosNorm[0] && playerPos[i + 1] == mousePosNorm[1]){
                 for(var k = 2; k < playerPos.length; k += 3){
                     playerPos[k] = 0;
-                } 
+                }
                 dropChar = false;
                 playerPos[i + 2] = 1;
                 break;
@@ -534,7 +576,7 @@ function main() {
             if(center[0] + mousePosNorm[0] >= 0 && center[1] + mousePosNorm[1] >= 0){
                 for(var k = 2; k < playerPos.length; k += 3){
                     playerPos[k] = 0;
-                } 
+                }
                 playerPos.push(mousePosNorm[0]);
                 playerPos.push(mousePosNorm[1]);
                 playerPos.push(1);
@@ -554,6 +596,22 @@ function main() {
             if(center[0] + mousePosNorm[0] >= 0 && center[1] + mousePosNorm[1] >= 0){
                 shapePos.push(mousePosNorm[0]);
                 shapePos.push(mousePosNorm[1]);
+            }
+        }
+    }
+
+    function drawNPC(){
+        var drawNPC = true;
+        for (var i = 0; i < npcPos.length; i += 2){
+            if(npcPos[i] == mousePosNorm[0] && npcPos[i + 1] == mousePosNorm[1]){
+                drawNPC = false;
+                break;
+            }
+        }
+        if(drawNPC && center[0] + mousePosNorm[0] < x_tiles && center[1] + mousePosNorm[1] < y_tiles){
+            if(center[0] + mousePosNorm[0] >= 0 && center[1] + mousePosNorm[1] >= 0){
+                npcPos.push(mousePosNorm[0]);
+                npcPos.push(mousePosNorm[1]);
             }
         }
     }
@@ -580,9 +638,87 @@ function main() {
     //     Animation / keeps running
     // ----------------------------------------
 
+    window.setInterval(function(){
+        $(document).ready(function () {
+            $.get(url, function(data) {
+                info = [];
+                usernames = [];
+                temp = String(data);
+                var temp2 = temp.split("<td>");
+                var i = 3;
+                while(temp2[i]) {
+                    temp3 = temp2[i].split("</td>");
+                    info.push(temp3[0]);
+                    temp3 = temp2[i+1].split("</td>");
+                    info.push(temp3[0]);
+                    temp3 = temp2[i+2].split("</td>");
+                    usernames.push(temp3[0])
+                    i += 4;
+                }
+            });
+        });
+    }, 1234);
+
+    window.setInterval(function(){
+        $(document).ready(function () {
+            $.get(npcUrl, function(data) {
+                npcInfo = [];
+                npcNames = [];
+                temp = String(data);
+                var temp2 = temp.split("<td>");
+                var i = 3;
+                while(temp2[i]) {
+                    temp3 = temp2[i].split("</td>");
+                    npcInfo.push(temp3[0]);
+                    temp3 = temp2[i+1].split("</td>");
+                    npcInfo.push(temp3[0]);
+                    temp3 = temp2[i+2].split("</td>");
+                    npcNames.push(temp3[0])
+                    i += 3;
+                }
+            });
+        });
+    }, 4321);
+
+    window.setInterval(function(){
+        $(document).ready(function () {
+            $.get(boardUrl, function(data) {
+                info = [];
+                temp = String(data);
+                var temp2 = temp.split("<td>");
+                var i = 3;
+                while(temp2[i]) {
+                    temp3 = temp2[i].split("</td>");
+                    x_tiles = temp3[0]
+                    temp3 = temp2[i+1].split("</td>");
+                    y_tiles = temp3[0]
+                    i += 4;
+                }
+            });
+        });
+    }, 14321);
+
+    window.setInterval(function(){
+        $(document).ready(function () {
+            $.get(colorUrl, function(data) {
+                temp = String(data);
+                var temp2 = temp.split("<td>");
+                var i = 3;
+                while(temp2[i]) {
+                    temp3 = temp2[i].split("</td>");
+                    r = (temp3[0]);
+                    temp3 = temp2[i+1].split("</td>");
+                    g = (temp3[0]);
+                    temp3 = temp2[i+2].split("</td>");
+                    b = (temp3[0])
+                    i += 3;
+                }
+            });
+        });
+    }, 12345);
+
     var landMoveSpeed = 0.07;
     var removePlayer = false;
-
     function animate(){
         requestAnimationFrame(animate);
         var pt = [0, 0];
@@ -593,18 +729,26 @@ function main() {
         pt[0] /= norm;
         pt[1] /= norm;
         revertVector(pt);
-        if(mouseDown){
-            putCharacters();
-            mouseDown = false;
+        if(info.length > 0){
+            playerPos = [];
+            for(var i = 0; i < info.length; i += 2){
+                playerPos.push(parseInt(info[i] - center[0], 10));
+                playerPos.push(parseInt(info[i+1] - center[1], 10));
+                playerPos.push(0);
+            }
         }
-        if(rightMouseDown){
+        if(npcInfo.length > 0){
+            npcPos = [];
+            for(var i = 0; i < npcInfo.length; i += 2){
+                npcPos.push(parseInt(npcInfo[i] - center[0], 10));
+                npcPos.push(parseInt(npcInfo[i+1] - center[1], 10));
+            }
+        }
+        if(mouseDown){
             drawShapes();
         }
-        if(middleMouseDown){
+        if(rightMouseDown){
             removeShapes();
-        } 
-        if(removePlayer){
-            removeCharacter()
         }
         for(var i = 0; i < playerPos.length; i += 3){
             if(playerPos[i] + center[0] >= x_tiles){
@@ -617,7 +761,7 @@ function main() {
         c.clearRect(0, 0, canvasWidth, canvasHeight);
         drawTiles(center);
         revertPoint(origPt, center);
-        drawTile(origPt[0] - center[0], origPt[1] - center[1], 155.5);
+        drawTile(origPt[0] - center[0], origPt[1] - center[1], 0.1);
         mousePosNorm[0] = Math.floor(origPt[0] - center[0] + 0.5);
         mousePosNorm[1] = Math.floor(origPt[1] - center[1] + 0.5);
         removePlayer = false;
@@ -670,7 +814,7 @@ if(window.FileReader) {
             addEventHandler(reader, 'loadend', function(e, file) {
                 var bin           = this.result; 
                 var newFile       = document.createElement('div');
-                newFile.innerHTML = 'Loaded : '+file.name+' size '+file.size+' B';
+                //newFile.innerHTML = 'Loaded : '+file.name+' size '+file.size+' B';
                 list.appendChild(newFile);  
                 var fileNumber = list.getElementsByTagName('div').length;
                 //status.innerHTML = fileNumber < files.length 
@@ -715,3 +859,4 @@ function addEventHandler(obj, evt, handler) {
         obj['on'+evt] = handler;
     }
 }
+
