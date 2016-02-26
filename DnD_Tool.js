@@ -244,8 +244,8 @@ function main() {
         var pt = [colOffset - 0.5, rowOffset - 0.5];
         var tileBitmapX =  (0 | (tileValue / 4))*32*2;
         var tileBitmapY = (tileValue %4)*32*3;
-        c.drawImage(img, tileBitmapX,tileBitmapY, 32,32, 
-                colOffset - 0.5, rowOffset - 0.5, 1, 1);
+        //c.drawImage(img, tileBitmapX,tileBitmapY, 32,32, 
+                //colOffset - 0.5, rowOffset - 0.5, 1, 1);
                 //c.drawImage(img, 0, 0, 32,32, 
                 //colOffset - 0.5, rowOffset - 0.5, 1, 1);
     }
@@ -383,9 +383,28 @@ function main() {
 
     var rect = canvas.getBoundingClientRect();
 
-    function getMousePos(canvas, evt) {
-        mousePos[0] = evt.clientX - rect.left;
-        mousePos[1] = evt.clientY - rect.top;
+    $(document).mousemove(function(event) {
+    captureMousePosition(event);
+    })
+
+    $(window).scroll(function(event) {
+        if(lastScrolledLeft != $(document).scrollLeft()){
+            mousePos[0] -= lastScrolledLeft;
+            lastScrolledLeft = $(document).scrollLeft();
+            mousePos[0] += lastScrolledLeft;
+        }
+        if(lastScrolledTop != $(document).scrollTop()){
+            mousePos[1] -= lastScrolledTop;
+            lastScrolledTop = $(document).scrollTop();
+            mousePos[1] += lastScrolledTop;
+        }
+        window.status = "x = " + mousePos[0] + " y = " + mousePos[1];
+    });
+
+    function captureMousePosition(event){
+        mousePos[0] = event.pageX - rect.left;
+        mousePos[1] = event.pageY - rect.top;
+    window.status = "x = " + mousePos[0] + " y = " + mousePos[1];
     }
 
     canvas.addEventListener('mousedown', function (evt) {
@@ -821,8 +840,8 @@ if(window.FileReader) {
                 //    ? 'Loaded 100% of file '+fileNumber+' of '+files.length+'...' 
                 //    : 'Done loading. processed '+fileNumber+' files.';
 
-                var image = document.createElement("img"); 
-                image.file = file;   
+                var image = document.createElement("image");
+                image.file = file;
                 image.src = bin;
                 //list.appendChild(img);
                 imgList[imgListLength] = new Image();
