@@ -413,7 +413,7 @@ function main() {
     }
 
     canvas.addEventListener('mousedown', function (evt) {
-        getMousePos(canvas, evt);
+        //getMousePos(canvas, evt);
         if(evt.which == 1){
             mouseDown = true;
         }
@@ -429,7 +429,7 @@ function main() {
         mouseDown = false;
         rightMouseDown = false;
         middleMouseDown = false;
-        getMousePos(canvas, evt);
+        //getMousePos(canvas, evt);
     }, false);
 
     canvas.addEventListener('mouseout', function (evt) {
@@ -439,7 +439,7 @@ function main() {
     }, false);
 
     canvas.addEventListener('mousemove', function (evt) {
-        getMousePos(canvas, evt);
+        //getMousePos(canvas, evt);
     }, false);
 
 
