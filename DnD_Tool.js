@@ -383,6 +383,11 @@ function main() {
 
     var rect = canvas.getBoundingClientRect();
 
+    function getMousePos(canvas, evt) {
+        mousePos[0] = evt.clientX - rect.left;
+        mousePos[1] = evt.clientY - rect.top;
+    }
+
     $(document).mousemove(function(event) {
     captureMousePosition(event);
     })
