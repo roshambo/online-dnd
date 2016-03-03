@@ -68,7 +68,7 @@ function main() {
     // angle of the y axis. Should be in [PI/2, PI]
     var angleY = Math.PI/2 + Math.PI/4; //Math.PI/2 + Math.PI/4
     // scale for the tiles
-    var scale = 50.0;
+    var scale = 100.0;
     // relative scale for the x of the tile. use it to stretch tiles.
     var relScaleX = 1;
     //for textures
@@ -192,22 +192,24 @@ function main() {
         //}
         if(imgListLength > 0 && imgNum < imgListLength ){
             if (imgList[imgNum] != undefined){
-                c.drawImage(imgList[imgNum], -12, -17, 22, 22);
+                c.drawImage(imgList[imgNum], -25, -35, 45, 45);
             }
         }
         else{
             c.fillStyle = 'rgba('+ color1 +',' + color2 +',' + color3 +', 1.0)';
-            c.fillRect(-12, -17, 22, 22);
+            c.fillRect(-25, -35, 45, 45);
         }
+        c.font = "20px Arial";
+        c.lineWidth = 5;
         c.strokeStyle = "rgba(0, 0, 0, 1.0)";
         c.fillStyle = "rgba(255, 255, 255, 1.0)";
         c.textAlign="center";
-        c.strokeText(usernames[imgNum], 0, -30);
-        c.fillText(usernames[imgNum], 0, -30);
-        c.strokeText(x + center[0] + ",  ", -5, -40);
-        c.fillText(x + center[0] + ",  ", -5, -40);
-        c.strokeText(y + center[1], 5, -40);
-        c.fillText(y + center[1], 5, -40);
+        c.strokeText(usernames[imgNum], 0, -50);
+        c.fillText(usernames[imgNum], 0, -50);
+        c.strokeText(x + center[0] + ",      ", -5, -20);
+        c.fillText(x + center[0] + ",      ", -5, -20);
+        c.strokeText(y + center[1], 5, -20);
+        c.fillText(y + center[1], 5, -20);
         c.restore();
     }
 
@@ -220,22 +222,24 @@ function main() {
         if (alpha < 1.0) c.globalAlpha = alpha;
         if(imgListLength > 0 && imgNum < imgListLength ){
             if (imgList[imgNum] != undefined){
-                c.drawImage(imgList[imgNum], -12, -17, 22, 22);
+                c.drawImage(imgList[imgNum], -25, -35, 45, 45);
             }
         }
         else{
             c.fillStyle = "rgba(50, 50, 50, 1.0)";
-            c.fillRect(-12, -17, 22, 22);
+            c.fillRect(-25, -35, 45, 45);
         }
+        c.font = "20px Arial";
+        c.lineWidth = 5;
         c.strokeStyle = "rgba(0, 0, 0, 1.0)";
-        c.fillStyle = "rgba(255, 255, 255, 1.0)";
+        c.fillStyle = "rgba(155, 155, 155, 1.0)";
         c.textAlign="center";
-        c.strokeText(npcNames[imgNum], 0, -30);
-        c.fillText(npcNames[imgNum], 0, -30);
-        c.strokeText(x + center[0] + ",  ", -5, -40);
-        c.fillText(x + center[0] + ",  ", -5, -40);
-        c.strokeText(y + center[1], 5, -40);
-        c.fillText(y + center[1], 5, -40);
+        c.strokeText(npcNames[imgNum], 0, -50);
+        c.fillText(npcNames[imgNum], 0, -50);
+        c.strokeText(x + center[0] + ",      ", -5, -20);
+        c.fillText(x + center[0] + ",      ", -5, -20);
+        c.strokeText(y + center[1], 5, -20);
+        c.fillText(y + center[1], 5, -20);
         c.restore();
     }
 
@@ -295,6 +299,14 @@ function main() {
         //c.globalAlpha = 1.0;
         c.globalAlpha = alpha + 0.05;
         projectFromCenter(colOffset, rowOffset, pt);
+        c.fillStyle = "rgba(200, 200, 200, 1.0)";
+        c.strokeStyle = "rgba(0, 0, 0, 1.0)";
+        c.textAlign="center";
+        c.font = "12px Arial";
+        if(((colOffset + center[0]) % 5 == 0 || (colOffset + center[0]) == x_tiles - 1 || (colOffset + center[0]) == 0) && ((rowOffset + center[1]) % 5 == 0 || (rowOffset + center[1]) == y_tiles - 1 || (rowOffset + center[1]) == 0)){
+            c.strokeText((0 |colOffset + center[0]) + ', ' + (0|rowOffset + center[1]), pt[0], pt[1] - 10);
+            c.fillText((0 |colOffset + center[0]) + ', ' + (0|rowOffset + center[1]), pt[0], pt[1] - 10);
+        }
         for(var i = 0; i < playerPos.length; i += 3){
             if(colOffset == playerPos[i] && rowOffset == playerPos[i + 1]){
                 if(playerPos[i + 2] == 1){
@@ -314,14 +326,6 @@ function main() {
                     drawOther(pt, alpha + 0.05, i/2, false, i, colOffset, rowOffset);
                 }
             }
-        }
-        c.fillStyle = "rgba(200, 200, 200, 1.0)";
-        c.strokeStyle = "rgba(0, 0, 0, 1.0)";
-        c.textAlign="center";
-        c.font = "10px Arial";
-        if(((colOffset + center[0] + 1) % 5 == 0 || (colOffset + center[0]) == x_tiles - 1 || (colOffset + center[0]) == 0) && ((rowOffset + center[1] + 1) % 5 == 0 || (rowOffset + center[1]) == y_tiles - 1 || (rowOffset + center[1]) == 0)){
-            c.strokeText((0 |colOffset + center[0] + 1) + ', ' + (0|rowOffset + center[1] + 1), pt[0], pt[1] - 10);
-            c.fillText((0 |colOffset + center[0] + 1) + ', ' + (0|rowOffset + center[1] + 1), pt[0], pt[1] - 10);
         }
     }
 
@@ -451,7 +455,7 @@ function main() {
         c.lineWidth = 3;
         c.fillStyle = 'rgba(255, 255, 255, 0.5)';
         c.strokeStyle = 'rgba(0, 0, 0, 0.5)';
-        c.font = "15px Arial";
+        c.font = "12px Arial";
         c.strokeText("x: " + x_tiles, (25), (canvasHeight) - 50);
         c.fillText("x: " + x_tiles, (25), (canvasHeight) - 50);
         c.strokeText("y: " + y_tiles, (100), (canvasHeight) - 50);
