@@ -1,0 +1,51 @@
+db.define_table('charCore',
+        Field('title', default="Enter Username!"),
+        Field('pname'),
+        Field('cname'),
+        Field('STR', 'integer', default=0),
+        Field('DEX', 'integer', default=0),
+        Field('CON', 'integer', default=0),
+        Field('INT', 'integer', default=0),
+        Field('WIS', 'integer', default=0),
+        Field('CHA', 'integer', default=0),
+        Field('HP', 'integer', default=0),
+        Field('MAXHP', 'integer', default=0))
+
+db.define_table('charAttack',
+        Field('title', default="Enter Username!"),
+        Field('BAB', 'integer', default=0),
+        Field('MAB', 'integer', default=0),
+        Field('RAB', 'integer', default=0),
+        Field('CMB', 'integer', default=0),
+        Field('MeleeDMG', 'integer', default=0),
+        Field('RangedDMG', 'integer', default=0),)
+
+db.define_table('charDefense',
+        Field('title', default="Enter Username!"),
+        Field('AC', 'integer', default=0),
+        Field('TAC', 'integer', default=0),
+        Field('FFAC', 'integer', default=0),
+        Field('CMD', 'integer', default=0),
+        Field('FFCMD', 'integer', default=0),
+        Field('SpellRes', 'integer', default=0),
+        Field('ReflexSave', 'integer', default=0),
+        Field('FortitudeSave', 'integer', default=0),
+        Field('WillSave', 'integer', default=0),
+        Field('DMGReduction', 'integer', default=0),)
+
+db.define_table('charSkills',
+        Field('title', default="Enter Username!"),
+        Field('UseSkill', 'integer', default=0),)
+
+db.define_table('charFeats',
+        Field('title', default="Enter Username!"),
+        Field('Feat1', 'integer', default=0),
+        Field('Feat2', 'integer', default=0),
+        Field('Feat3', 'integer', default=0),
+        Field('Feat4', 'integer', default=0),
+        Field('Feat5', 'integer', default=0),
+        Field('Feat6', 'integer', default=0),
+        Field('Feat7', 'integer', default=0),
+        Field('Feat8', 'integer', default=0),
+        Field('Feat9', 'integer', default=0),
+        Field('Feat10', 'integer', default=0),)
