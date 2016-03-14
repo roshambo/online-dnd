@@ -685,7 +685,7 @@ function main() {
                 }
             });
         });
-    }, 1234);
+    }, 2000);
 
     window.setInterval(function(){
         $(document).ready(function () {
@@ -706,7 +706,7 @@ function main() {
                 }
             });
         });
-    }, 4321);
+    }, 5432);
 
     window.setInterval(function(){
         $(document).ready(function () {
@@ -743,7 +743,7 @@ function main() {
                 }
             });
         });
-    }, 12345);
+    }, 13456);
 
     var landMoveSpeed = 0.07;
     var removePlayer = false;
@@ -789,7 +789,7 @@ function main() {
         c.clearRect(0, 0, canvasWidth, canvasHeight);
         drawTiles(center);
         revertPoint(origPt, center);
-        drawTile(origPt[0] - center[0], origPt[1] - center[1], 0.1);
+        //drawTile(origPt[0] - center[0], origPt[1] - center[1], 0.1);
         mousePosNorm[0] = Math.floor(origPt[0] - center[0] + 0.5);
         mousePosNorm[1] = Math.floor(origPt[1] - center[1] + 0.5);
         removePlayer = false;
@@ -887,4 +887,3 @@ function addEventHandler(obj, evt, handler) {
         obj['on'+evt] = handler;
     }
 }
-

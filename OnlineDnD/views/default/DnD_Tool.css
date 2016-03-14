@@ -1,0 +1,278 @@
+#gameArea {
+  width: 672px;
+  height: 330px;
+  margin: 0px auto;
+
+}
+
+#canvas {
+  background: black;
+  border: 1px solid black;
+
+  z-index: -1;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 620px;
+  position: relative;
+  padding: 0px 0px 0px 0px;
+  margin: 0px 0px 0px 0px;
+  float: left;
+
+}
+
+#drop {
+  position: absolute;
+  top: 0px;
+  left: 560px;
+  min-height: 195px;
+  width: 256px;
+  border: 1px solid white;
+  margin: 0px;
+  padding: 10px;
+}
+
+div.chat {
+  position: absolute;
+  z-index: 0;
+  background-color: #333333;
+  opacity:.8;
+  width: 20%;
+  height: 350px;
+  bottom: 23%;
+  left: 3%;
+  border: none;
+}
+
+.character {
+  background: black;
+  width: 100%;
+  margin: 20px 0px 80px 0px;
+}
+
+pre {
+  border: none;
+  background: none;
+  color: #F0E68c;
+  font-family: sans-serif;
+  font-size: 10pt;
+  display: inline;
+  word-wrap: break-word;
+}
+table {
+  border-collapse: collapse;
+  border: 0;
+}
+
+td {
+  border: 0;
+  padding: 0;
+}
+
+
+#body {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  right: 100px;
+}
+
+#input {
+  width: 100%;
+  height: 20%;
+  position: absolute;
+  border: none;
+  bottom: 0;
+  right: 0;
+  border-top: 1px solid;
+  
+}
+
+#inbox{
+  width: 100%;
+  overflow: auto;
+  height: 80%;
+  position: relative;
+  border: none;
+
+}
+
+.message {
+  width: 100%;
+  position: relative;
+  border: none;
+}
+#nav {
+  text-align: right;
+  float: right;
+  z-index: 99;
+}
+
+#post_button {
+   color: black;
+   padding-left:0px;
+   position: absolute;
+   right: 3px;
+   bottom: 11px;
+}
+input#chat_sb{
+  padding: none;
+  height: 100%;
+  width: 100%;
+}
+#txtArea {
+   padding-right:0px;
+   position: absolute;
+   left: 3px;
+   bottom: 0px;
+   color:#F0E68c;
+}
+
+textarea{
+    resize: none;
+    background: none;
+    border: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    outline: none;
+    color:#F0E68c;
+}
+
+h4{
+    text-align: center;
+}
+#npcForm {
+  position: absolute;
+  top: 0px;
+  left: 75%;
+}
+
+#colorForm {
+  position: relative;
+  top: 0px;
+  left: 50%;
+}
+
+#boardForm {
+  position: absolute;
+  top: 0px;
+  left: 25%;
+}
+
+#playerForm {
+  position: absolute;
+  top: 0px;
+  left: 0%;
+}
+.pForm {
+
+  background: rgba(255,255,255,0.2);
+  border: 2px solid #fff;
+    
+    
+  width: 20%;
+  border: 2px;
+
+
+  margin-bottom: 5px;
+  padding-left: 5px;
+}
+
+.box {
+  width: 100%;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.2);
+  padding: 35px;
+  border: 2px solid #fff;
+
+  text-align: center;
+}
+
+.button {
+  font-size: 1em;
+  padding: 10px;
+  color: #fff;
+  border: 2px solid #06D85F;
+
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+}
+.button:hover {
+  background: #06D85F;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 34%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+}
+.overlay:target {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup {
+  margin: 200px auto;
+  padding: 20px;
+  background: #000;
+  border-radius: 5px;
+  width: 100%;
+  position: relative;
+  transition: all 5s ease-in-out;
+}
+
+
+.popup .close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+
+  text-decoration: none;
+  color: #333;
+}
+.popup .close:hover {
+  color: #06D85F;
+}
+.popup .corecontent {
+  max-height: 30%;
+  overflow: auto;
+}
+
+.popup .defensecontent {
+  max-height: 30%;
+  overflow: auto;
+}
+
+.popup .attackcontent {
+  max-height: 30%;
+  overflow: auto;
+}
+            
+.popup .skillcontent {
+  max-height: 30%;
+  overflow: auto;
+}
+
+.popup .featcontent {
+  max-height: 30%;
+  overflow: auto;
+}
+
+@media screen and (max-width: 700px){
+  .box{
+    width: 70%;
+  }
+  .popup{
+    width: 70%;
+  }
+}

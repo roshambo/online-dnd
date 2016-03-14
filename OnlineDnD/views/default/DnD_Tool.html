@@ -1,0 +1,124 @@
+{{extend 'layout.html'}}
+
+<title>DnD Tool</title>
+
+<html>
+    <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="character_tools.css">
+    <link rel="stylesheet" type="text/css" href="DnD_Tool.css">
+    </head>
+
+    <body>
+
+    <div class="pForm" id="playerForm">
+        <h4 > Player's Position </h4>
+        {{=LOAD('default','editForm',ajax_trap=True)}}
+    </div>
+
+    <div class="pForm" id="npcForm">
+        <h4> NPC Positions </h4>
+        {{=LOAD('default','editNPC',ajax_trap=True)}}
+    </div>
+
+    <div class="pForm" id="boardForm">
+        <h4> Size of Board </h4>
+        {{=LOAD('default','editBoard',ajax_trap=True)}}
+    </div>
+    <div class="pForm" id="colorForm">
+        <h4> Color of Board </h4>
+        {{=LOAD('default','editColor',ajax_trap=True)}}
+    </div>
+
+<div class="board">
+    <canvas id="canvas" width = "1600" height = "900">You shouldn't see this.</canvas>
+    <script src="DnD_Tool.js"></script>
+    <div class="chat">
+        <div id="inbox">
+        {{ for message in messages: }}
+            {{ =XML(message.me_html) }}
+        {{ pass }}
+        </div>
+
+        <div id="input">
+            <form action="{{=URL('message_new')}}" method="post" id="messageform">
+            <table>
+                <tr>
+                    <td id="txtArea"><textarea rows="3" cols="23" name="body" id="message"></textarea></td>
+                    <td id="post_button"><input type="submit" value="Post" id="chat_sb"/></td>
+                </tr>
+             </table>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<div class="character">
+    <div class="box">
+        <a class="button" href="#popup1">Core Stats</a>
+        <a class="button" href="#popup2">Defense</a>
+        <a class="button" href="#popup3">Attack</a>
+        <a class="button" href="#popup4">Skills</a>
+        <a class="button" href="#popup5">Feats</a>
+    </div>
+
+    <div id="popup1" class="overlay">
+        <div class="popup">
+            <a class="close" href="#">×</a>
+            <div class="corecontent">
+            <div id="editCharCore">{{=LOAD('default','editCharCore',ajax_trap=True)}}</div>
+            </div>
+        </div>
+    </div>
+
+   <div id="popup2" class="overlay">
+        <div class="popup">
+            <a class="close" href="#">×</a>
+            <div class="defensecontent">
+            <div id="editCharDefense">{{=LOAD('default','editCharDefense',ajax_trap=True)}}</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="popup3" class="overlay">
+        <div class="popup">
+            <a class="close" href="#">×</a>
+            <div class="attackcontent">
+            <div id="editCharAttack">{{=LOAD('default','editCharAttack',ajax_trap=True)}} </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="popup4" class="overlay">
+        <div class="popup">
+            <a class="close" href="#">×</a>
+            <div class="attackcontent">
+            <div id="editCharSkills">{{=LOAD('default','editCharSkills',ajax_trap=True)}}</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="popup5" class="overlay">
+        <div class="popup">
+            <a class="close" href="#">×</a>
+            <div class="attackcontent">
+            <div id="editCharFeats">{{=LOAD('default','editCharFeats',ajax_trap=True)}}</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+    <script>
+        var url_new_message = "{{ =URL('message_new', extension='json', user_signature=True) }}";
+        var url_update_messages = "{{ =URL('message_updates', extension='json', user_signature=True) }}";
+        var url_failed_authorization = "{{ =auth.settings.on_failed_authorization }}";
+    </script>
+    <script src="{{ =URL('static', 'chat.js') }}" type="text/javascript"></script>
+
+
+    </body>
+
+</html>
